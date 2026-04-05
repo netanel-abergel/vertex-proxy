@@ -1,0 +1,23 @@
+{
+  "name": "vertex-proxy",
+  "version": "1.0.0",
+  "description": "Vertex AI proxy for OpenClaw — translates Anthropic API requests to GCP Vertex AI",
+  "main": "proxy.js",
+  "scripts": {
+    "start": "node proxy.js",
+    "test": "curl -s -m 5 http://localhost:${PROXY_PORT:-4100}/health | node -e \"const d=require('fs').readFileSync('/dev/stdin','utf8');const j=JSON.parse(d);console.log(j.status==='ok'?'OK':'FAIL');process.exit(j.status==='ok'?0:1)\""
+  },
+  "keywords": [
+    "vertex-ai",
+    "anthropic",
+    "claude",
+    "proxy",
+    "openclaw",
+    "gcp"
+  ],
+  "author": "Netanel Abergel",
+  "license": "MIT",
+  "dependencies": {
+    "@anthropic-ai/vertex-sdk": "^1.0.0"
+  }
+}

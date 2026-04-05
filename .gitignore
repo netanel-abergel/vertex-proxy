@@ -1,0 +1,7 @@
+node_modules/
+proxy.log
+proxy.log.*
+*.json.bak
+application_default_credentials.json
+gcp-adc.json
+.env
