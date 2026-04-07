@@ -2,7 +2,8 @@
 # Vertex AI Proxy Controller for OpenClaw
 # Usage: vertex-ctl {start|stop|status|model|test}
 
-PROXY_DIR="/opt/ocana/bifrost"
+# Auto-detect proxy dir: resolve symlink, then go up from scripts/
+PROXY_DIR="$(cd "$(dirname "$(readlink -f "$0" 2>/dev/null || realpath "$0" 2>/dev/null || echo "$0")")" && cd .. && pwd)"
 OC_CONF="/opt/ocana/openclaw/openclaw.json"
 AGENT_MODELS="/opt/ocana/openclaw/agents/main/agent/models.json"
 AUTH_PROFILES="/opt/ocana/openclaw/agents/main/agent/auth-profiles.json"
@@ -29,8 +30,8 @@ safe_jq_update() {
 }
 
 kill_proxy() {
-  pkill -f "bifrost/run.sh" 2>/dev/null
-  pkill -f "bifrost/proxy.js" 2>/dev/null
+  pkill -f "vertex-proxy/scripts/run.sh" 2>/dev/null
+  pkill -f "vertex-proxy/src/proxy.js" 2>/dev/null
   if command -v fuser &>/dev/null; then
     fuser -k "${PORT}/tcp" 2>/dev/null
   else
