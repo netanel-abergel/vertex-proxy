@@ -142,6 +142,20 @@ case "$1" in
       echo "                  Then: vertex-ctl start"
     fi
     ;;
+  enforce)
+    ENFORCER="$PROXY_DIR/scripts/proxy-enforcer.py"
+    if [ ! -f "$ENFORCER" ]; then
+      echo "✗ proxy-enforcer.py not found at $ENFORCER"
+      exit 1
+    fi
+    if [ "$2" = "cron" ]; then
+      (crontab -l 2>/dev/null | grep -v proxy-enforcer; echo "*/2 * * * * python3 $ENFORCER 2>/dev/null") | crontab -
+      echo "✓ Cron installed: proxy config enforced every 2 minutes"
+    else
+      python3 "$ENFORCER" --verbose
+      echo "✓ Proxy config enforced"
+    fi
+    ;;
   model)
     if [ -z "$2" ]; then
       echo "Available models:"
@@ -179,6 +193,8 @@ case "$1" in
     echo "  model          Show current model"
     echo "  model <name>   Switch model (e.g. claude-opus-4-6)"
     echo "  test           Send a test message through the proxy"
+    echo "  enforce        Re-apply proxy routing (fixes config after gateway restart)"
+    echo "  enforce cron   Install cron to auto-enforce every 2 minutes"
     exit 1
     ;;
 esac
