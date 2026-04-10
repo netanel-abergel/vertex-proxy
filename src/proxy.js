@@ -118,6 +118,9 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
+    // Normalize model names: strip provider prefixes (e.g. bedrock-claude-sonnet-4-6 → claude-sonnet-4-6)
+    params.model = params.model.replace(/^bedrock-/, '');
+
     log('Proxy:', params.model, params.stream ? 'stream' : 'sync');
     debug('Request body size:', body.length, 'bytes');
 
